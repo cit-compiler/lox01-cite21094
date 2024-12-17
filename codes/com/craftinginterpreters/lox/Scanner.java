@@ -137,7 +137,18 @@ public class Scanner {
   private void string() {
     while (peek() != '"' && !isAtEnd()) {
       if (peek() == '\n') line++;
+
+      if (peek() == '\\' && peekNext() == '"') {
+        advance();
+        advance();
+      } else if (peek() == '"') {
+        break;
+      } else {
+        advance();
+      }
+
       advance();
+
     }
 
     if (isAtEnd()) {
@@ -149,7 +160,7 @@ public class Scanner {
     advance();
 
     // Trim the surrounding quotes.
-    String value = source.substring(start + 1, current - 1);
+    String value = source.substring(start + 1, current - 1).replace("\\\"", "\"");
     addToken(STRING, value);
   }
 
